@@ -1,181 +1,132 @@
-# SatelliteVisualizer
- 
+<a id="readme-top"></a>
 
-# Description
-This is a senior project from CSULA students, we are undergraduate computer scientist students that have been given this task by the Aerospace Corporation. The aim of this project is to take satellite data and provide a solution where the Aerospace Corporation can easily view areas that aren't cover by satallites. This technology can be used in increase gps location tracking. 
+<h3 align="center">dop_generation</h3>
 
-# Getting Started
+  <p align="center">
+    Python scripts for generating Dilution of Precision (DOP) data and storing it in an InfluxDB database. It includes tools for processing SEM almanac files, computing DOP metrics, and writing results to InfluxDB
+  </p>
+</div>
 
-## Operating System Compability 
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#dependencies">Dependencies</a></li>
+        <li><a href="#installation">Installation</a></li>
+        <li><a href="#creating-the-database">Creating the Database</a></li>
+      </ul>
+    </li>
+    <li><a href="#usage">Usage</a></li>
+    <li><a href="#acknowledgments">Acknowledgments</a></li>
+  </ol>
+</details>
+
+<!-- ABOUT THE PROJECT -->
+## About The Project
+
+The scripts in this repository were provided by The Aerospace Corporation and are used for processing satellite navigation data. They generate Dilution of Precision (DOP) values from SEM almanac files and store the results in an InfluxDB database. This repository serves to document the setup, dependencies, and usage of these scripts.
+
 | O/S | Status |
 |-----|--------|
 | Windows | ✅ |
 | Linux | ✅ |
 | macOS | ✅ |
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## **Prerequisites**
 
+<!-- GETTING STARTED -->
+## Getting Started
+
+### Prerequisites
 1. Python
+   * Run this command on the terminal to check Python is already installed on your device
+    ```sh
+    python --version
+    ```
+    * If you recieve a message with Python 3.12.4 you should be set. If not install it running this commands:
+    ```sh
+    sudo apt update
+    sudo apt install python3
+    ```
 2. InfluxDb 1.8 version
-3. Docker
+   * To install Influxdb 1.8 visit [https://www.influxdata.com/downloads](https://www.influxdata.com/downloads/) <br> Once you are in this page scroll all the way down to [Are you interested in InfluxDB 1.x Open Source?] and select your operating         system.
+   #### Linux set up
+   * Run this command 
+    ```sh
+    wget https://download.influxdata.com/influxdb/releases/influxdb_1.8.10_amd64.deb
+    sudo dpkg -i influxdb_1.8.10_amd64.deb
+    ```
+   #### Mac set up
+   * Run this command 
+    ```sh
+    brew update
+    brew install influxdb@1.11.8
+    ```
+   #### Windows set up
 
-## Installation
+   
 
-#### Linux set up
-###### Python Install
-In linux python is usually shipped with the distros, so we should first check if its installed.
-- run this command on the terminal
-```
-python --version
-```
-If you recieve a message with Python 3.12.4 you should be set with python. If not install it running this commands:
+   * Run this command to confirm the installation
+   ```sh
+    influx --version
+   ```
 
-```
-sudo apt update
-sudo apt install python3
-```
+3. Clone the repository from GitHub
 
-From here we should compartilize this project to a specific virtual environment for python. The reason we should do this is to seperate different versions of modules. Not all projects run the latest updated modules, we avoid later conflicts where different version modules can create havoc within projects.
+    * Choose where you want to clone the repository locally:
 
-[Anaconda](https://www.anaconda.com/download/success) is an application that you should install before progressing, it is not needed though, but the next steps will be done with anaconda.
+      ```
+      cd /path/to/your_directory
+      ```
+    * Clone the repository:
 
+      ```
+      git clone https://github.com/Josephc0/DOP-Generation
+      ```
+    <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-Virtual Environment with Anaconda
-- *conda* is the command to package manager, *create* is a sub command to create new environment, *--name* is to specify the name of environment, and seniorDesign is the name of the environment
-```
-conda create --name seniorDesign 
-```
+### Dependencies
+```dop_generations``` requires the following **dependencies**:
 
-> [!NOTE]
-> For any future dependacies we will pip install/conda install directly within this environment.
-
-To begin working in this environment we run the this command
-
-```
-# insert the name of your environment
-conda activate "name of your environment"
-```
-To exit out of environment run this command
-
-```
-conda deactivate
-```
-
-
-###### InfluixDB Install
-
-To install Influxdb 1.8 we first need to go to [Influxdb](https://www.influxdata.com/downloads/) Once you are in this page scroll all the way down to [Are you interested in InfluxDB 1.x Open Source?] select your operating system, in my case I will run the Ubuntu & Debian installation.
-- run this commands
-```
-wget https://download.influxdata.com/influxdb/releases/influxdb_1.8.10_amd64.deb
-sudo dpkg -i influxdb_1.8.10_amd64.deb
-```
-That should be all, but make sure to check by running this command
-
-```
-influx --version
-```
-The result should be = InfluxDB shell version: 1.8.10
+| Package | Version | Description |
+|---------|---------|-------------|
+| **numpy** | 1.25.2 | A library for working with large arrays and math operations.|
+| **matplotlib** | 3.7.2 | A library for creating graphs and visualizations in Python. |
+| **plotly** | 5.16.1 | A library for making interactive charts and plots. |
+| **influxdb** | 5.3.2 | A Python client for working with InfluxDB, a database for time series data. |
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
+### Installation
+1. Navigate to where you cloned the repository locally
 
-#### Setting the Environment ready
+    ```
+    cd /path/to/your_directory/dop_generation
+    ```
 
-Run the environment to install python modules. This are the installations we are going to need
+2. Install dependencies
+    ```
+    python -m pip install -r requirements.txt
+    ```
 
-1. Flask
-2. InlfuxDB
-3. FastApi
-4. Uvicorn
-5. Numpy
-6. Scikit-learn
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
-Start the environment
-```
-conda activate "name of project" 
-```
-
-This is the fast method of installing all the needed depedancies
-
-```
- conda install flask fastapi uvicorn numpy 
-```
-We also need this (f2py normalizer influxdb) modules but conda couldn't find the packages. It turns out that f2py comes within numpy,and normalizer works with scikit-learn module. Since we already installed numpy with the command above we will move on to the other modules. This are the commands: 
-
-
-```
-pip install scikit-learn
-```
-
-the last command will be 
-
-```
-pip install influxdb
-
-```
-
-At this point in the process you might be asking yourself on why we are installing a module for influxdb when we install the db software on the system. The asnwer is simple,the module will be used to interact with the database using python scripts, the influx software is the database service. 
-
-
-#### Launching
-
-When launching the app, we need to make sure that influxdb is running, so we fist use this commands in order to get influxdb working. 
-
-In VsCode open a terminal window, we need to enter our virtual environment.
-
-```
-conda activate " name of venv"
-```
-
-Once enable run this commands.
-This is used in order start influxdb
-
-```
-sudo systemctl start influxdb
-```
-Afterwards we need to also make sure the status of the system is working, run this command.
-```
-sudo systemctl status influxdb
-```
-OUTPUT SHOULD LOOK SOMETHING LIKE THIS
-![Screenshot from 2024-09-23 22-30-50](https://github.com/user-attachments/assets/5c03b765-bf7f-4254-8196-5614e12f4011)
-
-
-To exit just enter this, its like Vim :)
-
-```
-:q
-```
-If all things go right run this command to get the program running 
-
-```
-python -m flask run
-```
-## PROCESSING SEM ALMANAC DATA WITH SCRIPT
-
-Make sure that you cd into the correct file path, this file path needs to hold the generate_dop_data.py
-Once you are here we make sure that the SEM ALMANAC file is also inside the same directory. 
-
-> [!IMPORTANT]
-> Check the path to file, in the original code the name for the SEM ALMANAC was different from new downloaded file.
-
-This is the command at the moment to process the data conversion.
-```
-export TIME_KEY=2024-08-21T15:40:30Z
-python generate_dop_data.py
-```
-
-## MAKING THE DATABASE (PART 1)
+## Creating the Database 
 
 This command is used to start influxdb
 ```
 sudo systemctl start influxdb
 ```
 
-This checks if the system is running, to exit out afterwards use :q
+This checks if the system is running
 
 ```
 sudo systemctl status influxdb
@@ -195,30 +146,10 @@ Now lets see the data base, this command will return the databasses that are sto
 ```
 SHOW DATABASES
 ```
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-## Queries
- SELECT * FROM dop LIMIT 10;
-name: dop
-time                GDOP HDOP Latitude Longitude NUM IN VIEW PDOP TDOP VDOP
-
-
-
-# GPS Visibility Analysis
-
-Author: Mark Mendiola, The Aerospace Corporation.
-
-## Dependencies
-
-Python 3.11.
-
-### Install
-
-```sh
-python -m pip install -r requirements.txt
-```
-
-## Configure
+<!-- USAGE EXAMPLES -->
+## Usage
 
 ### The DOP Script
 
@@ -271,3 +202,48 @@ python write_to_influxdb.py
 ```
 
 The website will query InfluxDB for this DOP data for this particular time step.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+<!-- ACKNOWLEDGMENTS -->
+## Acknowledgments
+
+This project was developed by Cal State LA Computer Science students as part of our Senior Design Project, in collaboration with The Aerospace Corporation.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+[contributors-shield]: https://img.shields.io/github/contributors/github_username/repo_name.svg?style=for-the-badge
+[contributors-url]: https://github.com/github_username/repo_name/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/github_username/repo_name.svg?style=for-the-badge
+[forks-url]: https://github.com/github_username/repo_name/network/members
+[stars-shield]: https://img.shields.io/github/stars/github_username/repo_name.svg?style=for-the-badge
+[stars-url]: https://github.com/github_username/repo_name/stargazers
+[issues-shield]: https://img.shields.io/github/issues/github_username/repo_name.svg?style=for-the-badge
+[issues-url]: https://github.com/github_username/repo_name/issues
+[license-shield]: https://img.shields.io/github/license/github_username/repo_name.svg?style=for-the-badge
+[license-url]: https://github.com/github_username/repo_name/blob/master/LICENSE.txt
+[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
+[linkedin-url]: https://linkedin.com/in/linkedin_username
+[product-screenshot]: images/screenshot.png
+[Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
+[Next-url]: https://nextjs.org/
+[React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
+[React-url]: https://reactjs.org/
+[Vue.js]: https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vuedotjs&logoColor=4FC08D
+[Vue-url]: https://vuejs.org/
+[Angular.io]: https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white
+[Angular-url]: https://angular.io/
+[Svelte.dev]: https://img.shields.io/badge/Svelte-4A4A55?style=for-the-badge&logo=svelte&logoColor=FF3E00
+[Svelte-url]: https://svelte.dev/
+[Laravel.com]: https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white
+[Laravel-url]: https://laravel.com
+[Bootstrap.com]: https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white
+[Bootstrap-url]: https://getbootstrap.com
+[JQuery.com]: https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white
+[JQuery-url]: https://jquery.com 
